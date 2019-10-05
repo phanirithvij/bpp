@@ -1,6 +1,7 @@
 #include <iostream>
 #include "main.hpp"
 #include <fstream>
+#include <sstream>
 using namespace std;
 
 int main(int argv, char **args)
@@ -18,10 +19,40 @@ int main(int argv, char **args)
     }
 
     // file exists
-    // ifstream infile(filename);
-    // infile.close();
+    ifstream infile(filename);
+    string line;
+    bool c_exists = false;
+    string a;
+    int b, c;
+    Btree bt = Btree();
+    while (getline(infile, line))
+    {
+        istringstream iss(line);
+        if (iss >> a >> b)
+            (iss >> c);
+        else
+        {
+            continue;
+        }
 
-    Btree b = Btree();
+        // two args
+        if (a == "INSERT")
+        {
+            bt.insert(b);
+        }
+        else if (a == "COUNT")
+        {
+            bt.count(b);
+        }
+        else if (a == "FIND")
+        {
+            if (bt.find(b)){
+                // cou
+            }
+        }
+        else
+            bt.range(b, c);
+    }
 
     return 0;
 }
