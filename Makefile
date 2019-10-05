@@ -1,5 +1,5 @@
 CPP = cl
-OBJ_LIST = main.obj utils.obj
+OBJ_LIST = main.obj utils.obj btree.obj
 
 build: main.exe
 
