@@ -2,9 +2,9 @@
 
 #ifdef _WIN32
 #include <experimental/filesystem>
-bool file_exists(std::string& fn)
+bool file_exists(const std::string& name)
 {
-    return std::experimental::filesystem::exists(fn);
+    return std::experimental::filesystem::exists(name);
 }
 #else
 #include <sys/stat.h>
