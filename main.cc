@@ -24,9 +24,10 @@ int main(int argv, char **args)
     bool c_exists = false;
     string a;
     int b, c;
-    Btree bt = Btree();
+    BPtree bt = BPtree();
     while (getline(infile, line))
     {
+        cout << line << endl;
         istringstream iss(line);
         if (iss >> a >> b)
             (iss >> c);
@@ -46,12 +47,17 @@ int main(int argv, char **args)
         }
         else if (a == "FIND")
         {
-            if (bt.find(b)){
-                // cou
+            if (bt.find(b))
+            {
+                cout << "YES" << endl;
             }
+            else
+                cout << "NO" << endl;
         }
         else
+        {
             bt.range(b, c);
+        }
     }
 
     return 0;

@@ -1,29 +1,38 @@
 #ifndef BTREE
 #define BTREE
+#include <vector>
+using namespace std;
+
+enum NodeType{
+    leaf, node
+};
 
 class Node
 {
 public:
-    int vals[3];
-    Node *nodes[4];
-    bool isroot = false;
-    bool isleaf = false;
+    vector<int >vals;
+    Node * nodes[4];
     Node *parent = nullptr;
+    bool isroot();
+    bool isleaf = false;
     Node *next = nullptr;
-    int count = 0;
+    void split(NodeType type);
+    bool insert(int vals);
+    Node();
 };
 
-class Btree
+class BPtree
 {
 public:
+    void insert(Node *curr, int x);
     void insert(int x);
     bool find(int x);
     int count(int x);
     void range(int x, int y);
-    Btree();
-    ~Btree();
+    BPtree();
+    ~BPtree();
 
 private:
-    Node root;
+    Node *root;
 };
 #endif

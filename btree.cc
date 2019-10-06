@@ -2,21 +2,52 @@
 #include <iostream>
 #include <algorithm>
 #include <iterator>
+#include <vector>
 using namespace std;
 
-Btree::Btree()
+BPtree::BPtree()
 {
-    root.isroot = true;
+    // cout << "Node " << endl;
+    root = new Node();
+    root->isleaf = true;
 }
 
-void Btree::insert(int x)
+void BPtree::insert(int x)
 {
-    cout << "inserting " << x << endl;
+    insert(root, x);
 }
 
-int Btree::count(int x)
+void BPtree::insert(Node *curr, int x)
 {
-    cout << "count " << x << endl;
+    if (curr->isleaf)
+    {
+        if (curr->insert(x))
+        {
+            // split
+            curr->split(leaf);
+        }
+    }
+
+    int i = 0;
+    Node *next = new Node();
+    cout << "Node i" << endl;
+    while (x > curr->vals[i])
+    {
+        if (i + 1 < curr->vals.size())
+        {
+            i++;
+        }
+        else
+        {
+            break;
+        }
+    }
+    next = curr->nodes[i];
+}
+
+int BPtree::count(int x)
+{
+    // cout << "count " << x << endl;
     return 82190;
 }
 
@@ -25,54 +56,99 @@ bool array_exists(Node *curr, int x)
     return (std::find(begin((*curr).vals), end((*curr).vals), x) != end((*curr).vals));
 }
 
-bool traverse(int x, int i, Node *curr)
-{
-    if (x == curr->vals[i])
-    {
-        // found the node
-        return true;
-    }
-    else if (curr->vals[i] < x)
-    {
-        curr = curr->nodes[i];
-    }
-    else
-    {
-        curr = curr->nodes[i + 1];
-    }
-    return false;
-}
-
 bool bfind(Node *curr, int x)
 {
-    int count = curr->count;
-    if (count == 0)
+    // cout << "Ass" << endl;
+    if (curr->vals.size() == 0)
     {
+        cout << "count = 0" << endl;
         // node has no elts
         return false;
     }
-    for (int i = 0; i < count; i++)
+    if (array_exists(curr, x))
     {
-        if (traverse(x, i, curr))
-            return true;
-        bfind(curr, x);
+        cout << "found" << endl;
+        // found x in the node
+        return true;
     }
-
-    return false;
+    if (curr->isleaf)
+    {
+        return false;
+    }
+    int i = 0;
+    // error
+    Node *next = new Node();
+    cout << "Node" << endl;
+    while (x > curr->vals[i])
+    {
+        if (i + 1 < curr->vals.size())
+        {
+            i++;
+        }
+        else
+        {
+            break;
+        }
+    }
+    next = curr->nodes[i];
+    return bfind(next, x);
+    // int index = distance(curr->vals, max_element(curr->vals, curr->vals + curr->count));
+    // cout << "Index of max element: " << curr->vals[index] << endl;
 };
 
-bool Btree::find(int x)
+bool BPtree::find(int x)
 {
-    return bfind(&root, x);
+    cout << "find " << x << endl;
+    return bfind(root, x);
+    // return true;
 }
 
-void Btree::range(int x, int y)
+void BPtree::range(int x, int y)
 {
     cout << "range " << x << " " << y << endl;
 }
 
-Btree::~Btree()
+BPtree::~BPtree()
 {
-    cout << "";
-    // cout << "Destroying Btree" << endl;
+    // cout << "";
+    cout << "Destroying BPtree" << endl;
+}
+
+bool Node::isroot()
+{
+    return parent == nullptr;
+}
+
+void Node::split(NodeType type)
+{
+    if (type == leaf)
+    {
+        // leaf
+        Node *newnode = new Node();
+        newnode->isleaf = true;
+        this->next = newnode;
+
+        int last = this->vals[this->vals.size() - 1];
+        this->vals.pop_back();
+        newnode->vals.push_back(last);
+        last = this->vals[this->vals.size() - 1];
+        this->vals.pop_back();
+        newnode->vals.push_back(last);
+
+        Node *parent = this->parent;
+        if (parent->vals.size() < 3)
+        {
+        }
+    }
+    else
+    {
+        // non-leaf
+    }
+}
+
+bool Node::insert(int x)
+{
+    this->vals.push_back(x);
+    sort(this->vals.begin(), this->vals.end());
+    return (this->vals.size() > 3);
 }
