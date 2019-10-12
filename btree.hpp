@@ -3,21 +3,25 @@
 #include <vector>
 using namespace std;
 
-enum NodeType{
-    leaf, node
+enum NodeType
+{
+    leaf,
+    node
 };
 
 class Node
 {
 public:
-    vector<int >vals;
-    Node * nodes[4];
+    vector<int> vals;
+    vector<Node *>nodes;
     Node *parent = nullptr;
     bool isroot();
-    bool isleaf = false;
+    bool isleaf();
+    NodeType type = node;
     Node *next = nullptr;
     void split(NodeType type);
-    bool insert(int vals);
+    int insert(int val);
+    bool insert(int val, Node *newnode);
     Node();
 };
 

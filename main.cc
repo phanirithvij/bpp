@@ -8,13 +8,13 @@ int main(int argv, char **args)
 {
     if (argv != 2)
     {
-        cout << "Usage: " << args[0] << " <filename>" << endl;
+        cout << "Usage: " << args[0] << " <filename>" << "\n";
         return -1;
     }
     string filename = args[1];
     if (!file_exists(filename))
     {
-        cout << "File " << filename << " doesn't exist" << endl;
+        cout << "File " << filename << " doesn't exist" << "\n";
         return -1;
     }
 
@@ -27,7 +27,7 @@ int main(int argv, char **args)
     BPtree bt = BPtree();
     while (getline(infile, line))
     {
-        cout << line << endl;
+        cout << line << "\n";
         istringstream iss(line);
         if (iss >> a >> b)
             (iss >> c);
@@ -49,10 +49,10 @@ int main(int argv, char **args)
         {
             if (bt.find(b))
             {
-                cout << "YES" << endl;
+                cout << "YES" << "\n";
             }
             else
-                cout << "NO" << endl;
+                cout << "NO" << "\n";
         }
         else
         {
