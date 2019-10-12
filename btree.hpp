@@ -19,10 +19,10 @@ public:
     bool isleaf();
     NodeType type = node;
     Node *next = nullptr;
-    void split(NodeType type);
+    void split();
     int insert(int val);
     bool insert(int val, Node *newnode);
-    Node();
+    Node(NodeType type);
 };
 
 class BPtree

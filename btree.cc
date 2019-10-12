@@ -7,9 +7,8 @@ using namespace std;
 
 BPtree::BPtree()
 {
-    // cout << "Node " << '\n';
-    root = new Node();
-    root->type = leaf;
+    cout << "init root" << '\n';
+    root = new Node(leaf);
 }
 
 void BPtree::insert(int x)
@@ -24,16 +23,18 @@ void BPtree::insert(Node *curr, int x)
         if (curr->insert(x))
         {
             // split
-            curr->split(leaf);
-        } else {
-            
-            cout << "else" << "\n";
+            curr->split();
+        }
+        else
+        {
+            cout << "else"
+                 << "\n";
             return;
         }
     }
 
     int i = 0;
-    Node *next = new Node();
+    Node *next = new Node(node);
     cout << "val is " << curr->vals[i] << '\n';
     cout << "x is " << x << '\n';
     cout << "Node i" << '\n';
@@ -42,11 +43,11 @@ void BPtree::insert(Node *curr, int x)
         cout << "i " << i << '\n';
         if (i + 1 < curr->vals.size())
         {
-            i++;
+            i += 1;
         }
         else
         {
-            cout << "iis " << i << '\n';
+            cout << "i is " << i << '\n';
             break;
         }
     }
@@ -85,7 +86,7 @@ bool bfind(Node *curr, int x)
     }
     int i = 0;
     // error
-    Node *next = new Node();
+    Node *next = new Node(node);
     cout << "Node" << '\n';
     while (x > curr->vals[i])
     {
@@ -130,15 +131,18 @@ bool Node::isleaf()
     return type == leaf;
 }
 
-Node::Node(){};
+Node::Node(NodeType type)
+{
+    this->type = type;
+};
 
-void Node::split(NodeType type)
+void Node::split()
 {
     if (type == leaf)
     {
+        cout << "it's a leaf" << '\n';
         // leaf
-        Node *newnode = new Node();
-        newnode->type = leaf;
+        Node *newnode = new Node(leaf);
         this->next = newnode;
 
         int last = this->vals[this->vals.size() - 1];
@@ -149,6 +153,13 @@ void Node::split(NodeType type)
         this->vals.pop_back();
         newnode->vals.push_back(last);
 
+        if (this->isroot())
+        {
+            cout << "splitting root"
+                 << "\n";
+            this->parent = new Node(node);
+        }
+
         Node *parent = this->parent;
         int idx = parent->insert(newnode->vals[0]);
         parent->nodes.insert(parent->nodes.begin() + idx, newnode);
@@ -156,24 +167,31 @@ void Node::split(NodeType type)
         {
             // no overflow
             newnode->parent = parent;
-            cout << this->parent;
+            cout << this->parent->vals[0] << "\n";
             // this->nodes.insert()
             return;
         }
         else
         {
             // overflow
-            parent->split(node);
+            parent->split();
         }
     }
     else
     {
         // non-leaf
-        Node *newnode = new Node();
+        Node *newnode = new Node(node);
 
         int last = this->vals[this->vals.size() - 1];
         this->vals.pop_back();
         newnode->vals.push_back(last);
+
+        if (this->parent == nullptr)
+        {
+            cout << "splitting root"
+                 << "\n";
+            this->parent = new Node(node);
+        }
 
         Node *parent = this->parent;
         if (!parent->insert(newnode->vals[0]))
@@ -184,7 +202,7 @@ void Node::split(NodeType type)
         else
         {
             // overflow
-            parent->split(node);
+            parent->split();
         }
     }
 }

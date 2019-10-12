@@ -1,6 +1,7 @@
 #include "main.hpp"
 
 #ifdef _WIN32
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <experimental/filesystem>
 bool file_exists(const std::string &name)
 {
