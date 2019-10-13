@@ -130,13 +130,14 @@ BPtree::~BPtree()
 void Node::destroy()
 {
     cout << "Destroying node" << endl;
-    this->vals.clear();
     for (int i = 0; i < this->nodes.size(); i++)
     {
+        cout << "i" << i << '\n';
         Node *nodex = new Node(node);
         nodex = this->nodes[i];
         nodex->destroy();
     }
+    this->vals.clear();
     if (this->type == leaf)
     {
         delete (this);
@@ -190,7 +191,6 @@ void Node::split(Node *root)
             cout << "new root" << '\n';
         }
 
-        Node *parent = this->parent;
         int idx = parent->insert_index(newnode->vals[0]);
         parent->vals.insert(parent->vals.begin() + idx, newnode->vals[0]);
         parent->nodes.insert(parent->nodes.begin() + idx + 1, newnode);
@@ -199,7 +199,7 @@ void Node::split(Node *root)
         {
             // no overflow
             cout << "leaf split successful" << '\n';
-            cout << this->parent->vals.size() << " " << this->parent->nodes.size() << "\n";
+            cout << root->vals.size() << " " << root->nodes.size() << "\n";
             // this->nodes.insert()
             return;
         }
@@ -233,13 +233,11 @@ void Node::split(Node *root)
         {
             cout << "splitting root"
                  << "\n";
-            this->parent = new Node(node);
-            this->parent->nodes.push_back(this);
+            parent = new Node(node);
+            parent->nodes.push_back(this);
             root = parent;
             cout << "new root" << '\n';
         }
-
-        Node *parent = this->parent;
 
         // insert lastbut one value in parent
         int idx = parent->insert_index(lastb);
