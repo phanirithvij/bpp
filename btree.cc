@@ -127,6 +127,41 @@ bool bfind(Node *curr, int x)
     return bfind(next, x);
 };
 
+Node *bfind(Node *curr, int x, int temp)
+{
+    if (curr->vals.size() == 0)
+    {
+        // cout << "empty node" << '\n';
+        // node has no elts
+        return nullptr;
+    }
+    if (curr->isleaf() /* && array_exists(curr, x) */)
+    {
+        // reached a leaf and found it
+        return curr;
+    }
+    // else if (curr->isleaf() && !array_exists(curr, x))
+    // {
+
+    //     return nullptr;
+    // }
+    int i = 0;
+    Node *next = new Node(node);
+    while (x > curr->vals[i])
+    {
+        if (i + 1 <= curr->vals.size())
+        {
+            i++;
+        }
+        else
+        {
+            break;
+        }
+    }
+    next = curr->nodes[i];
+    return bfind(next, x, temp);
+};
+
 bool BPtree::find(int x)
 {
     return bfind(root, x);
@@ -134,7 +169,59 @@ bool BPtree::find(int x)
 
 void BPtree::range(int x, int y)
 {
-    cout << "range " << x << " " << y << '\n';
+    // cout << "range " << x << " " << y << '\n';
+    if (x <= y)
+    {
+        // Node *xdeed = bfind(root, x, 0);
+        // Node *ydeed = bfind(root, y, 0);
+        // if (xdeed != nullptr && ydeed != nullptr)
+        // {
+        //     while (xdeed != ydeed)
+        //     {
+        //         for (int i = 0; i < xdeed->vals.size(); i++)
+        //         {
+        //             if (xdeed->vals[i] >= x && xdeed->vals[i] <= y)
+        //                 cout << xdeed->vals[i] << " ";
+        //         }
+        //         xdeed = xdeed->next;
+        //     }
+        //     for (int i = 0; i < ydeed->vals.size(); i++)
+        //     {
+        //         if (ydeed->vals[i] >= x && ydeed->vals[i] <= y)
+        //         {
+        //             cout << ydeed->vals[i] << " ";
+        //         }
+        //     }
+        //     cout << '\n';
+        // }
+        Node *curr = root;
+        while (curr->nodes.size() != 0)
+        {
+            curr = curr->nodes[0];
+            // cout << curr << endl;
+        }
+        while (curr != nullptr)
+        {
+            for (int i = 0; i < curr->vals.size(); i += 1)
+            {
+                if (curr->vals[i] >= x && curr->vals[i] <= y)
+                {
+                    if (i + 1 <= curr->vals.size()){
+                        if (curr->vals[i+1] > y){
+                            cout << curr->vals[i];
+                        } else {
+                            cout << curr->vals[i] << " ";
+                        }
+                    }
+                }
+                else if (curr->vals[i] > y)
+                {
+                    break;
+                }
+            }
+            curr = curr->next;
+        }
+    }
 }
 
 bool Node::isroot()
