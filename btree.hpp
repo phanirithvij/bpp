@@ -20,8 +20,8 @@ public:
     NodeType type = node;
     Node *next = nullptr;
     void split();
-    int insert(int val);
-    bool insert(int val, Node *newnode);
+    int insert_index(int val);
+    bool insert(int val);
     Node(NodeType type);
 };
 
