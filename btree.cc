@@ -65,6 +65,7 @@ void BPtree::insert(Node *curr, int x)
         next_node = curr->nodes[i];
         // cout << "next_node is " << next_node << '\n';
         // cout << "i.e\n";
+        // abosultely needed
         next_node->parent = curr;
         // cout << "same parent? " << (next_node->parent == curr) << endl;
         // next_node->print_self();
@@ -88,13 +89,13 @@ bool bfind(Node *curr, int x)
 {
     if (curr->vals.size() == 0)
     {
-        // cout << "empty node" << '\n';
+        cout << "empty node" << '\n';
         // node has no elts
         return false;
     }
     if (array_exists(curr, x))
     {
-        // cout << "found" << '\n';
+        cout << "found" << '\n';
         // found x in the node
         return true;
     }
@@ -155,8 +156,10 @@ void Node::split(Node **root)
     if (type == leaf)
     {
         // leaf
-        auto newnode = new Node(leaf);
+        Node *newnode = new Node(leaf);
+        Node *existing_next = this->next;
         this->next = newnode;
+        newnode->next = existing_next;
 
         int last = this->vals[this->vals.size() - 1];
         this->vals.pop_back();
@@ -180,7 +183,14 @@ void Node::split(Node **root)
             // cout << "new root" << '\n';
         }
         // else
-            // cout << "leaf split" << '\n';
+        //     cout << "leaf split" << '\n';
+
+        // cout << "curr is" << '\n';
+        // print_self();
+        // cout << this << endl;
+        // cout << "what is next?" << '\n';
+        // next->print_self();
+        // cout << next << endl;
         // (*root)->print();
         newnode->parent = parent;
         // cout << "vals " << newnode->vals[0] << "," << newnode->vals[1] << '\n';
@@ -296,13 +306,18 @@ void Node::print()
     print_self();
 }
 
-void BPtree::print_leaves(){
-    auto curr = root;
-    while (curr->nodes.size() != 0){
+void BPtree::print_leaves()
+{
+    Node *curr = root;
+    while (curr->nodes.size() != 0)
+    {
         curr = curr->nodes[0];
+        // cout << curr << endl;
     }
-    while (curr != nullptr){
+    while (curr != nullptr)
+    {
         curr->print_self();
+        // cout << curr << endl;
         curr = curr->next;
     }
 }
