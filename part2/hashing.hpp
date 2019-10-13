@@ -4,14 +4,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#define RT pair<Block *, Block *>
-
-#ifdef _WIN32
 #include <functional>
-#else
-#include <function>
-#endif
-
+#define BlockPair pair<Block *, Block *>
 
 using namespace std;
 typedef unsigned long ul;
@@ -24,11 +18,11 @@ class Block
 
 public:
 	Block(int capacity);
-	bool Find(int &key);
-	bool Insert(int &key);
-	bool Empty();
+	bool find(int &key);
+	bool insert(int &key);
+	bool empty();
 	ul getHash(function<ul(int &)> hashFunc);
-	RT Split(function<ul(int &)> hashFunc);
+	BlockPair split(function<ul(int &)> hashFunc);
 };
 
 class Hash
@@ -40,7 +34,7 @@ class Hash
 
 public:
 	Hash(ul capacity, function<ul(ul, int &)> hashFunc);
-	void Insert(int &key);
-	bool Find(int &key);
+	void insert(int &key);
+	bool find(int &key);
 };
 #endif //HASHS_HPP

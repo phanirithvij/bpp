@@ -30,7 +30,7 @@ int main(int argv, char **args)
     ifstream infile(filename);
     string line;
     int b;
-    Hash hashe(1024, func);
+    Hash hashe(1024 * 20, func);
 
     while (getline(infile, line))
     {
@@ -40,10 +40,10 @@ int main(int argv, char **args)
             continue;
         }
 
-        if (!hashe.Find(b))
+        if (!hashe.find(b))
         {
             cout << b << '\n';
-            hashe.Insert(b);
+            hashe.insert(b);
         }
     }
     return 0;

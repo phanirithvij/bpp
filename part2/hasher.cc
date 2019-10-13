@@ -7,7 +7,7 @@ Block::Block(int capacity)
     this->next = nullptr;
 }
 
-bool Block::Find(int &key)
+bool Block::find(int &key)
 {
     for (int pk : data)
     {
@@ -15,11 +15,11 @@ bool Block::Find(int &key)
             return true;
     }
     if (this->next != nullptr)
-        return this->next->Find(key);
+        return this->next->find(key);
     return false;
 }
 
-bool Block::Insert(int &key)
+bool Block::insert(int &key)
 {
     if (data.size() < this->capacity)
     {
@@ -30,11 +30,11 @@ bool Block::Insert(int &key)
     {
         this->next = new Block(this->capacity);
     }
-    this->next->Insert(key);
+    this->next->insert(key);
     return true;
 }
 
-bool Block::Empty()
+bool Block::empty()
 {
     return data.empty();
 }
@@ -44,44 +44,44 @@ ul Block::getHash(function<ul(int &)> hashFunc)
     return hashFunc(data[0]);
 }
 
-RT Block::Split(function<ul(int &)> hashFunc)
+BlockPair Block::split(function<ul(int &)> hashFunc)
 {
-    RT splited;
+    BlockPair spp;
 
     if (this->next != nullptr)
     {
-        splited = this->next->Split(hashFunc);
+        spp = this->next->split(hashFunc);
         delete this->next;
         this->next = nullptr;
     }
     else
     {
-        splited = RT(new Block(capacity), new Block(capacity));
+        spp = BlockPair(new Block(capacity), new Block(capacity));
     }
 
-    for (int key : data)
+    for (auto key : data)
     {
         ul hash = hashFunc(key);
-        if (splited.first->Empty() && !splited.second->Empty())
+        if (spp.first->empty() && !spp.second->empty())
         {
-            if (hash == hashFunc(splited.second->data[0]))
-                splited.second->Insert(key);
+            if (hash == hashFunc(spp.second->data[0]))
+                spp.second->insert(key);
             else
-                splited.first->Insert(key);
+                spp.first->insert(key);
         }
-        else if (splited.first->Empty() && splited.second->Empty())
+        else if (spp.first->empty() && spp.second->empty())
         {
-            splited.first->Insert(key);
+            spp.first->insert(key);
         }
         else
         {
-            if (hash != hashFunc(splited.first->data[0]))
-                splited.second->Insert(key);
+            if (hash != hashFunc(spp.first->data[0]))
+                spp.second->insert(key);
             else
-                splited.first->Insert(key);
+                spp.first->insert(key);
         }
     }
-    return splited;
+    return spp;
 }
 
 Hash::Hash(ul capacity, function<ul(ul, int &)> hashFunc)
@@ -94,12 +94,12 @@ Hash::Hash(ul capacity, function<ul(ul, int &)> hashFunc)
     this->hashFunc = hashFunc;
 }
 
-void Hash::Insert(int &key)
+void Hash::insert(int &key)
 {
     ul hash = hashFunc(currentHash, key);
     if (hash < current)
         hash = hashFunc(currentHash + 1, key);
-    bool overFlow = this->blocks[hash]->Insert(key);
+    bool overFlow = this->blocks[hash]->insert(key);
 
     auto splitLambda = [this](int &key) {
         return hashFunc(currentHash + 1, key);
@@ -107,15 +107,15 @@ void Hash::Insert(int &key)
 
     if (overFlow)
     {
-        pair<Block *, Block *> splited = this->blocks[current]->Split(splitLambda);
-        if ((!splited.first->Empty() && splited.first->getHash(splitLambda) != current) ||
-            (!splited.second->Empty() && splited.second->getHash(splitLambda) == current))
-            std::swap(splited.first, splited.second);
+        pair<Block *, Block *> spp = this->blocks[current]->split(splitLambda);
+        if ((!spp.first->empty() && spp.first->getHash(splitLambda) != current) ||
+            (!spp.second->empty() && spp.second->getHash(splitLambda) == current))
+            std::swap(spp.first, spp.second);
 
         delete this->blocks[current];
-        this->blocks[current] = splited.first;
-        this->blocks.push_back(splited.second);
-        current++;
+        this->blocks[current] = spp.first;
+        this->blocks.push_back(spp.second);
+        current+=1;
 
         if (this->blocks.size() == 2 * current)
         {
@@ -125,12 +125,12 @@ void Hash::Insert(int &key)
     }
 }
 
-bool Hash::Find(int &key)
+bool Hash::find(int &key)
 {
     ul hash = hashFunc(currentHash, key);
     if (hash < current)
     {
         hash = hashFunc(currentHash + 1, key);
     }
-    return blocks[hash]->Find(key);
+    return blocks[hash]->find(key);
 }
