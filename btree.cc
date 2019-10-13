@@ -27,34 +27,38 @@ void BPtree::insert(Node *curr, int x)
         }
         else
         {
-            cout << "else"
+            cout << "insert successful"
                  << "\n";
             return;
         }
     }
-
-    int i = 0;
-    Node *next = new Node(node);
-    cout << "val is " << curr->vals[i] << '\n';
-    cout << "x is " << x << '\n';
-    cout << "nodes " << curr->nodes.size() << " " << curr->vals.size() << "\n";
-    while (x >= curr->vals[i])
+    else
     {
-        cout << "i " << i << '\n';
-        if (i + 1 < curr->vals.size())
+        cout << "not a leaf"
+                << "\n";
+        int i = 0;
+        Node *next = new Node(node);
+        cout << "val is " << curr->vals[i] << '\n';
+        cout << "x is " << x << '\n';
+        cout << "nodes " << curr->nodes.size() << " " << curr->vals.size() << "\n";
+        while (x >= curr->vals[i])
         {
-            i += 1;
+            cout << "i " << i << '\n';
+            if (i + 1 < curr->vals.size())
+            {
+                i += 1;
+            }
+            else
+            {
+                cout << "i is " << i << '\n';
+                break;
+            }
         }
-        else
-        {
-            cout << "i is " << i << '\n';
-            break;
-        }
+        cout << curr->nodes.size() << '\n';
+        // error
+        next = curr->nodes[i];
+        insert(next, x);
     }
-    cout << curr->nodes.size() << '\n';
-    // error
-    next = curr->nodes[i];
-    insert(next, x);
 }
 
 int BPtree::count(int x)
@@ -175,7 +179,7 @@ void Node::split()
         {
             // no overflow
             cout << "leaf split successful" << '\n';
-            // cout << this->parent->vals[0] << "\n";
+            cout << this->parent->vals.size() << " " << this->parent->nodes.size() << "\n";
             // this->nodes.insert()
             return;
         }
