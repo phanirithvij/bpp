@@ -206,10 +206,14 @@ void BPtree::range(int x, int y)
             {
                 if (curr->vals[i] >= x && curr->vals[i] <= y)
                 {
-                    if (i + 1 <= curr->vals.size()){
-                        if (curr->vals[i+1] > y){
+                    if (i + 1 <= curr->vals.size())
+                    {
+                        if (curr->vals[i + 1] > y)
+                        {
                             cout << curr->vals[i];
-                        } else {
+                        }
+                        else
+                        {
                             cout << curr->vals[i] << " ";
                         }
                     }
