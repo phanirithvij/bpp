@@ -13,16 +13,17 @@ class Node
 {
 public:
     vector<int> vals;
-    vector<Node *>nodes;
+    vector<Node *> nodes;
     Node *parent = nullptr;
     bool isroot();
     bool isleaf();
     NodeType type = node;
     Node *next = nullptr;
-    void split();
+    void split(Node *root);
     int insert_index(int val);
     bool insert(int val);
     Node(NodeType type);
+    void destroy();
 };
 
 class BPtree

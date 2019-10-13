@@ -23,7 +23,7 @@ void BPtree::insert(Node *curr, int x)
         if (!curr->insert(x))
         {
             // split
-            curr->split();
+            curr->split(root);
         }
         else
         {
@@ -35,7 +35,7 @@ void BPtree::insert(Node *curr, int x)
     else
     {
         cout << "not a leaf"
-                << "\n";
+             << "\n";
         int i = 0;
         Node *next = new Node(node);
         cout << "val is " << curr->vals[i] << '\n';
@@ -77,7 +77,7 @@ bool bfind(Node *curr, int x)
 {
     if (curr->vals.size() == 0)
     {
-        cout << "count = 0" << '\n';
+        // cout << "count = 0" << '\n';
         // node has no elts
         return false;
     }
@@ -124,6 +124,24 @@ BPtree::~BPtree()
 {
     // cout << "";
     cout << "Destroying BPtree" << '\n';
+    root->destroy();
+}
+
+void Node::destroy()
+{
+    cout << "Destroying node" << endl;
+    this->vals.clear();
+    for (int i = 0; i < this->nodes.size(); i++)
+    {
+        Node *nodex = new Node(node);
+        nodex = this->nodes[i];
+        nodex->destroy();
+    }
+    if (this->type == leaf)
+    {
+        delete (this);
+        return;
+    }
 }
 
 bool Node::isroot()
@@ -145,7 +163,7 @@ Node::Node(NodeType type)
 };
 
 // splits the current node according to it's type
-void Node::split()
+void Node::split(Node *root)
 {
     if (type == leaf)
     {
@@ -168,6 +186,8 @@ void Node::split()
                  << "\n";
             this->parent = new Node(node);
             this->parent->nodes.push_back(this);
+            root = parent;
+            cout << "new root" << '\n';
         }
 
         Node *parent = this->parent;
@@ -186,7 +206,7 @@ void Node::split()
         else
         {
             // overflow
-            parent->split();
+            parent->split(root);
         }
     }
     else if (type == node)
@@ -215,6 +235,8 @@ void Node::split()
                  << "\n";
             this->parent = new Node(node);
             this->parent->nodes.push_back(this);
+            root = parent;
+            cout << "new root" << '\n';
         }
 
         Node *parent = this->parent;
@@ -236,7 +258,7 @@ void Node::split()
         else
         {
             // overflow
-            parent->split();
+            parent->split(root);
         }
     }
 }
