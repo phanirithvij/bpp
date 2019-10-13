@@ -27,34 +27,34 @@ void BPtree::insert(Node *curr, int x)
         }
         else
         {
-            cout << "insert successful"
-                 << "\n";
+            // cout << "insert successful"
+            //      << "\n";
             return;
         }
     }
     else
     {
-        cout << "not a leaf"
-             << "\n";
+        // cout << "not a leaf"
+        //      << "\n";
         int i = 0;
         Node *next = new Node(node);
-        cout << "val is " << curr->vals[i] << '\n';
-        cout << "x is " << x << '\n';
-        cout << "nodes " << curr->nodes.size() << " " << curr->vals.size() << "\n";
+        // cout << "val is " << curr->vals[i] << '\n';
+        // cout << "x is " << x << '\n';
+        // cout << "nodes " << curr->nodes.size() << " " << curr->vals.size() << "\n";
         while (x >= curr->vals[i])
         {
-            cout << "i " << i << '\n';
+            // cout << "i " << i << '\n';
             if (i + 1 < curr->vals.size())
             {
                 i += 1;
             }
             else
             {
-                cout << "i is " << i << '\n';
+                // cout << "i is " << i << '\n';
                 break;
             }
         }
-        cout << curr->nodes.size() << '\n';
+        // cout << curr->nodes.size() << '\n';
         // error
         next = curr->nodes[i];
         insert(next, x);
@@ -120,31 +120,6 @@ void BPtree::range(int x, int y)
     cout << "range " << x << " " << y << '\n';
 }
 
-BPtree::~BPtree()
-{
-    // cout << "";
-    cout << "Destroying BPtree" << '\n';
-    root->destroy();
-}
-
-void Node::destroy()
-{
-    cout << "Destroying node" << endl;
-    for (int i = 0; i < this->nodes.size(); i++)
-    {
-        cout << "i" << i << '\n';
-        Node *nodex = new Node(node);
-        nodex = this->nodes[i];
-        nodex->destroy();
-    }
-    this->vals.clear();
-    if (this->type == leaf)
-    {
-        delete (this);
-        return;
-    }
-}
-
 bool Node::isroot()
 {
     return parent == nullptr;
@@ -152,8 +127,8 @@ bool Node::isroot()
 
 bool Node::isleaf()
 {
-    cout << "leaf"
-         << '\n';
+    // cout << "leaf"
+    //      << '\n';
     return type == leaf;
 }
 
@@ -168,29 +143,33 @@ void Node::split(Node *root)
 {
     if (type == leaf)
     {
-        cout << "it's a leaf" << '\n';
         // leaf
         Node *newnode = new Node(leaf);
         this->next = newnode;
 
         int last = this->vals[this->vals.size() - 1];
         this->vals.pop_back();
-        newnode->vals.push_back(last);
-
-        last = this->vals[this->vals.size() - 1];
+        int lastb = this->vals[this->vals.size() - 1];
         this->vals.pop_back();
+
+        newnode->vals.push_back(lastb);
         newnode->vals.push_back(last);
 
         if (this->isroot())
         {
-            cout << "splitting root"
-                 << "\n";
-            this->parent = new Node(node);
-            this->parent->nodes.push_back(this);
+            // cout << "splitting root"
+            //      << "\n";
+            cout << "root split" << '\n';
+            parent = new Node(node);
+            parent->nodes.push_back(this);
             root = parent;
-            cout << "new root" << '\n';
+            cout << (parent == root) << '\n';
+            // cout << "new root" << '\n';
         }
+        else
+            cout << "leaf split" << '\n';
 
+        cout << "vals " << newnode->vals[0] << "," << newnode->vals[1] << '\n';
         int idx = parent->insert_index(newnode->vals[0]);
         parent->vals.insert(parent->vals.begin() + idx, newnode->vals[0]);
         parent->nodes.insert(parent->nodes.begin() + idx + 1, newnode);
@@ -198,8 +177,8 @@ void Node::split(Node *root)
         if (parent->vals.size() <= 3)
         {
             // no overflow
-            cout << "leaf split successful" << '\n';
-            cout << root->vals.size() << " " << root->nodes.size() << "\n";
+            // cout << "leaf split successful" << '\n';
+            // cout << root->vals.size() << " " << root->nodes.size() << "\n";
             // this->nodes.insert()
             return;
         }
@@ -213,6 +192,7 @@ void Node::split(Node *root)
     {
         // non-leaf
         Node *newnode = new Node(node);
+        this->next = newnode;
 
         int last = this->vals[this->vals.size() - 1];
         this->vals.pop_back();
@@ -231,12 +211,12 @@ void Node::split(Node *root)
 
         if (this->parent == nullptr)
         {
-            cout << "splitting root"
-                 << "\n";
+            // cout << "splitting root"
+            //      << "\n";
             parent = new Node(node);
             parent->nodes.push_back(this);
             root = parent;
-            cout << "new root" << '\n';
+            // cout << "new root" << '\n';
         }
 
         // insert lastbut one value in parent
@@ -247,9 +227,10 @@ void Node::split(Node *root)
 
         if (parent->vals.size() <= 3)
         {
-            cout << "node split done"
-                 << "\n";
-            cout << "now parent has " << parent->nodes.size() << " pointers"
+            // cout << "node split done"
+            //      << "\n";
+            root->print();
+            cout << "now root has " << root->vals.size() << " vals"
                  << "\n";
             return;
         }
@@ -283,4 +264,48 @@ int Node::insert_index(int x)
     // int retval = find(this->vals.begin(), this->vals.end(), x) - this->vals.begin();
     // cout << "find " << retval << '\n';
     // return retval;
+}
+
+void BPtree::print()
+{
+    root->print();
+}
+
+void Node::print()
+{
+    cout << "node has " << nodes.size() << " pointers" << '\n';
+    for (int i = 0; i < nodes.size(); i += 1)
+    {
+        nodes[i]->print();
+    }
+    for (int i = 0; i < vals.size(); i += 1)
+    {
+        cout << vals[i] << " ";
+    }
+    cout << '\n';
+}
+
+BPtree::~BPtree()
+{
+    // cout << "";
+    cout << "Destroying BPtree" << '\n';
+    root->destroy();
+}
+
+void Node::destroy()
+{
+    // cout << "Destroying node" << endl;
+    for (int i = 0; i < this->nodes.size(); i++)
+    {
+        // cout << "i" << i << '\n';
+        Node *nodex = new Node(node);
+        nodex = this->nodes[i];
+        nodex->destroy();
+    }
+    this->vals.clear();
+    if (this->type == leaf)
+    {
+        delete (this);
+        return;
+    }
 }

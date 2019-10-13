@@ -24,6 +24,7 @@ public:
     bool insert(int val);
     Node(NodeType type);
     void destroy();
+    void print();
 };
 
 class BPtree
@@ -34,10 +35,9 @@ public:
     bool find(int x);
     int count(int x);
     void range(int x, int y);
+    void print();
     BPtree();
     ~BPtree();
-
-private:
     Node *root;
 };
 #endif

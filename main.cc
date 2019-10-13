@@ -29,7 +29,7 @@ int main(int argv, char **args)
     BPtree bt = BPtree();
     while (getline(infile, line))
     {
-        cout << line << "\n";
+        // cout << line << "\n";
         istringstream iss(line);
         if (iss >> a >> b)
             (iss >> c);
@@ -42,6 +42,8 @@ int main(int argv, char **args)
         if (a == "INSERT")
         {
             bt.insert(b);
+            bt.root->print();
+            cout << "---\n";
         }
         else if (a == "COUNT")
         {
@@ -63,6 +65,8 @@ int main(int argv, char **args)
             bt.range(b, c);
         }
     }
+
+    bt.print();
 
     return 0;
 }
