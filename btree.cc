@@ -1,10 +1,9 @@
 #include "btree.hpp"
+#include "main.hpp"
 #include <iostream>
 #include <algorithm>
 #include <iterator>
 #include <vector>
-// #include "assert.h"
-#include <cassert>
 using namespace std;
 
 BPtree::BPtree()
@@ -59,9 +58,6 @@ void BPtree::insert(Node *curr, int x)
         }
         // cout << "i2 " << i << '\n';
         // cout << "curr vals, nodes size " << curr->vals.size() << " " << curr->nodes.size() << '\n';
-        // error
-        // ignore assert
-        // assert(i < curr->nodes.size());
         next_node = curr->nodes[i];
         // cout << "next_node is " << next_node << '\n';
         // cout << "i.e\n";
@@ -75,13 +71,22 @@ void BPtree::insert(Node *curr, int x)
 
 int BPtree::count(int x)
 {
-    // cout << "count " << x << '\n';
-    return 82190;
-}
-
-bool array_exists(Node *curr, int x)
-{
-    return (std::find(begin((*curr).vals), end((*curr).vals), x) != end((*curr).vals));
+    int couaa = 0;
+    Node *curr = root;
+    while (curr->nodes.size() != 0)
+    {
+        curr = curr->nodes[0];
+    }
+    while (curr != nullptr)
+    {
+        for (int i = 0; i < curr->vals.size(); i++)
+        {
+            if (curr->vals[i] == x)
+                couaa += 1;
+        }
+        curr = curr->next;
+    }
+    return couaa;
 }
 
 // Finds if a given key exists in the tree
@@ -89,13 +94,13 @@ bool bfind(Node *curr, int x)
 {
     if (curr->vals.size() == 0)
     {
-        cout << "empty node" << '\n';
+        // cout << "empty node" << '\n';
         // node has no elts
         return false;
     }
     if (array_exists(curr, x))
     {
-        cout << "found" << '\n';
+        // cout << "found" << '\n';
         // found x in the node
         return true;
     }

@@ -16,3 +16,8 @@ bool file_exists(const std::string &name)
 	return (stat(name.c_str(), &buffer) == 0);
 }
 #endif
+
+bool array_exists(Node *curr, int x)
+{
+	return (std::find(begin((*curr).vals), end((*curr).vals), x) != end((*curr).vals));
+}

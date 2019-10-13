@@ -47,7 +47,7 @@ int main(int argv, char **args)
         }
         else if (a == "COUNT")
         {
-            bt.count(b);
+            cout << bt.count(b) << '\n';
         }
         else if (a == "FIND")
         {
