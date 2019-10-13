@@ -8,13 +8,15 @@ int main(int argv, char **args)
 {
     if (argv != 2)
     {
-        cout << "Usage: " << args[0] << " <filename>" << "\n";
+        cout << "Usage: " << args[0] << " <filename>"
+             << "\n";
         return -1;
     }
     string filename = args[1];
     if (!file_exists(filename))
     {
-        cout << "File " << filename << " doesn't exist" << "\n";
+        cout << "File " << filename << " doesn't exist"
+             << "\n";
         return -1;
     }
 
@@ -49,10 +51,12 @@ int main(int argv, char **args)
         {
             if (bt.find(b))
             {
-                cout << "YES" << "\n";
+                cout << "YES"
+                     << "\n";
             }
             else
-                cout << "NO" << "\n";
+                cout << "NO"
+                     << "\n";
         }
         else
         {
