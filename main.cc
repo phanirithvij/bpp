@@ -66,7 +66,7 @@ int main(int argv, char **args)
         }
     }
 
-    bt.print();
+    bt.print_leaves();
 
     return 0;
 }

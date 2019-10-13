@@ -3,11 +3,13 @@
 #include <algorithm>
 #include <iterator>
 #include <vector>
+// #include "assert.h"
+#include <cassert>
 using namespace std;
 
 BPtree::BPtree()
 {
-    cout << "init root" << '\n';
+    // cout << "init root" << '\n';
     root = new Node(leaf);
 }
 
@@ -23,7 +25,8 @@ void BPtree::insert(Node *curr, int x)
         if (!curr->insert(x))
         {
             // split
-            curr->split(root);
+            // cout << "overflow" << '\n';
+            curr->split(&root);
         }
         else
         {
@@ -34,17 +37,17 @@ void BPtree::insert(Node *curr, int x)
     }
     else
     {
-        // cout << "not a leaf"
+        // cout << "\nnot a leaf"
         //      << "\n";
         int i = 0;
-        Node *next = new Node(node);
+        Node *next_node = new Node(node);
         // cout << "val is " << curr->vals[i] << '\n';
         // cout << "x is " << x << '\n';
-        // cout << "nodes " << curr->nodes.size() << " " << curr->vals.size() << "\n";
-        while (x >= curr->vals[i])
+        while (x > curr->vals[i])
         {
+            // cout << x << ">" << curr->vals[i] << '\n';
             // cout << "i " << i << '\n';
-            if (i + 1 < curr->vals.size())
+            if (i + 1 <= curr->vals.size())
             {
                 i += 1;
             }
@@ -54,10 +57,18 @@ void BPtree::insert(Node *curr, int x)
                 break;
             }
         }
-        // cout << curr->nodes.size() << '\n';
+        // cout << "i2 " << i << '\n';
+        // cout << "curr vals, nodes size " << curr->vals.size() << " " << curr->nodes.size() << '\n';
         // error
-        next = curr->nodes[i];
-        insert(next, x);
+        // ignore assert
+        // assert(i < curr->nodes.size());
+        next_node = curr->nodes[i];
+        // cout << "next_node is " << next_node << '\n';
+        // cout << "i.e\n";
+        next_node->parent = curr;
+        // cout << "same parent? " << (next_node->parent == curr) << endl;
+        // next_node->print_self();
+        insert(next_node, x);
     }
 }
 
@@ -77,13 +88,13 @@ bool bfind(Node *curr, int x)
 {
     if (curr->vals.size() == 0)
     {
-        // cout << "count = 0" << '\n';
+        // cout << "empty node" << '\n';
         // node has no elts
         return false;
     }
     if (array_exists(curr, x))
     {
-        cout << "found" << '\n';
+        // cout << "found" << '\n';
         // found x in the node
         return true;
     }
@@ -97,7 +108,7 @@ bool bfind(Node *curr, int x)
     // cout << "Node" << '\n';
     while (x > curr->vals[i])
     {
-        if (i + 1 < curr->vals.size())
+        if (i + 1 <= curr->vals.size())
         {
             i++;
         }
@@ -139,18 +150,20 @@ Node::Node(NodeType type)
 };
 
 // splits the current node according to it's type
-void Node::split(Node *root)
+void Node::split(Node **root)
 {
     if (type == leaf)
     {
         // leaf
-        Node *newnode = new Node(leaf);
+        auto newnode = new Node(leaf);
         this->next = newnode;
 
         int last = this->vals[this->vals.size() - 1];
         this->vals.pop_back();
         int lastb = this->vals[this->vals.size() - 1];
         this->vals.pop_back();
+
+        // cout << "lastb, last " << lastb << ',' << last << '\n';
 
         newnode->vals.push_back(lastb);
         newnode->vals.push_back(last);
@@ -159,40 +172,41 @@ void Node::split(Node *root)
         {
             // cout << "splitting root"
             //      << "\n";
-            cout << "root split" << '\n';
+            // cout << "root split" << '\n';
             parent = new Node(node);
             parent->nodes.push_back(this);
-            root = parent;
-            cout << (parent == root) << '\n';
+            *root = parent;
+            // cout << "root==parent " << (parent == (*root)) << '\n';
             // cout << "new root" << '\n';
         }
-        else
-            cout << "leaf split" << '\n';
-
-        cout << "vals " << newnode->vals[0] << "," << newnode->vals[1] << '\n';
+        // else
+            // cout << "leaf split" << '\n';
+        // (*root)->print();
+        newnode->parent = parent;
+        // cout << "vals " << newnode->vals[0] << "," << newnode->vals[1] << '\n';
         int idx = parent->insert_index(newnode->vals[0]);
+        // cout << "idx " << idx << '\n';
         parent->vals.insert(parent->vals.begin() + idx, newnode->vals[0]);
         parent->nodes.insert(parent->nodes.begin() + idx + 1, newnode);
-        newnode->parent = parent;
         if (parent->vals.size() <= 3)
         {
             // no overflow
             // cout << "leaf split successful" << '\n';
-            // cout << root->vals.size() << " " << root->nodes.size() << "\n";
-            // this->nodes.insert()
+            // cout << (*root)->vals[0] << " " << (*root)->nodes.size() << "\n";
             return;
         }
         else
         {
             // overflow
-            parent->split(root);
+            parent->split(&(*root));
         }
     }
     else if (type == node)
     {
         // non-leaf
+        // cout << "non-leaf split started" << '\n';
         Node *newnode = new Node(node);
-        this->next = newnode;
+        // this->next = newnode;
 
         int last = this->vals[this->vals.size() - 1];
         this->vals.pop_back();
@@ -215,7 +229,7 @@ void Node::split(Node *root)
             //      << "\n";
             parent = new Node(node);
             parent->nodes.push_back(this);
-            root = parent;
+            *root = parent;
             // cout << "new root" << '\n';
         }
 
@@ -229,15 +243,15 @@ void Node::split(Node *root)
         {
             // cout << "node split done"
             //      << "\n";
-            root->print();
-            cout << "now root has " << root->vals.size() << " vals"
-                 << "\n";
+            // cout << "now root has " << (*root)->vals.size() << " vals"
+            //      << "\n";
+            // root->print();
             return;
         }
         else
         {
             // overflow
-            parent->split(root);
+            parent->split(&(*root));
         }
     }
 }
@@ -253,17 +267,10 @@ bool Node::insert(int x)
 // returns index
 int Node::insert_index(int x)
 {
-    return upper_bound(this->vals.begin(), this->vals.end(), x) - this->vals.begin();
-    // this->vals.push_back(x);
-    // sort(this->vals.begin(), this->vals.end());
-    // cout << "sorted vals:";
-    // for (int i = 0; i < this->vals.size(); i++)
-    //     cout << this->vals[i] << " ";
-    // cout << '\n';
-    // // returns index
-    // int retval = find(this->vals.begin(), this->vals.end(), x) - this->vals.begin();
-    // cout << "find " << retval << '\n';
-    // return retval;
+    int dx = lower_bound(vals.begin(), vals.end(), x) - vals.begin();
+    // cout << "insert_index: vals ";
+    // print_self();
+    return dx;
 }
 
 void BPtree::print()
@@ -273,11 +280,32 @@ void BPtree::print()
 
 void Node::print()
 {
-    cout << "node has " << nodes.size() << " pointers" << '\n';
+    // cout << "node has " << nodes.size() << " pointers" << '\n';
     for (int i = 0; i < nodes.size(); i += 1)
     {
         nodes[i]->print();
     }
+    if (type == leaf && !isroot())
+    {
+        cout << "l-";
+    }
+    else if (isroot())
+    {
+        cout << "r-";
+    }
+    print_self();
+}
+
+void BPtree::print_leaves(){
+    auto curr = root;
+    while (curr->nodes.size() != 0){
+        curr = curr->nodes[0];
+    }
+    curr->print_self();
+}
+
+void Node::print_self()
+{
     for (int i = 0; i < vals.size(); i += 1)
     {
         cout << vals[i] << " ";
@@ -288,7 +316,7 @@ void Node::print()
 BPtree::~BPtree()
 {
     // cout << "";
-    cout << "Destroying BPtree" << '\n';
+    // cout << "Destroying BPtree" << '\n';
     root->destroy();
 }
 
