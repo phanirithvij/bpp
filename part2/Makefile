@@ -1,5 +1,5 @@
 CPP = cl
-OBJ_LIST = main.obj utils.obj
+OBJ_LIST = main.obj utils.obj hasher.obj
 
 build: main.exe
 

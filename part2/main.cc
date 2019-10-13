@@ -2,7 +2,13 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "hashing.hpp"
 using namespace std;
+
+unsigned long func(unsigned long value, const int &key)
+{
+    return (key & ((1 << (value + 1)) - 1));
+}
 
 int main(int argv, char **args)
 {
@@ -24,6 +30,8 @@ int main(int argv, char **args)
     ifstream infile(filename);
     string line;
     int b;
+    Hash hashe(1024, func);
+
     while (getline(infile, line))
     {
         istringstream iss(line);
@@ -32,7 +40,11 @@ int main(int argv, char **args)
             continue;
         }
 
-        cout << b << "\n";
+        if (!hashe.Find(b))
+        {
+            cout << b << '\n';
+            hashe.Insert(b);
+        }
     }
     return 0;
 }
