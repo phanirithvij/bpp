@@ -6,6 +6,7 @@ Tested on Windows 10.
 
 To run:
 
+Open cmd.exe
 ```shell
 vcvars64.bat
 ```
