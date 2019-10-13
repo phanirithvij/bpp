@@ -19,21 +19,22 @@ cd part1
 nmake.exe
 ```
 
-Then `main.exe <inputfile>`
 
 ```shell
 cd part2
 nmake.exe
 ```
+Then `main.exe <inputfile>`
 
 If on linux (not tested)
 
 ```shell
 cd part1
-g++ *.cc -o main.exe
+g++ *.cc -o main
 ```
 
 ```shell
-cd part1
-g++ *.cc -o main.exe
+cd part2
+g++ *.cc -o main
 ```
+Then `main <inputfile>`
