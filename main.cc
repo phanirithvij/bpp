@@ -42,8 +42,8 @@ int main(int argv, char **args)
         if (a == "INSERT")
         {
             bt.insert(b);
-            bt.root->print();
-            cout << "---\n";
+            // bt.root->print();
+            // cout << "---\n";
         }
         else if (a == "COUNT")
         {

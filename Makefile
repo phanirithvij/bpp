@@ -7,4 +7,4 @@ main.exe: $(OBJ_LIST)
     $(CPP) /Fe$@ $**
 
 clean:
-    del *.obj main.exe
+    del *.obj

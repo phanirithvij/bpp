@@ -301,7 +301,10 @@ void BPtree::print_leaves(){
     while (curr->nodes.size() != 0){
         curr = curr->nodes[0];
     }
-    curr->print_self();
+    while (curr != nullptr){
+        curr->print_self();
+        curr = curr->next;
+    }
 }
 
 void Node::print_self()
